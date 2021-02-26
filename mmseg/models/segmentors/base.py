@@ -83,7 +83,11 @@ class BaseSegmentor(nn.Module):
                 augs (multiscale, flip, etc.) and the inner list indicates
                 images in a batch.
         """
+        # for torch scripts, batch size is 1, and  imgs is tensor of shape (1, 3, h, w)
+        imgs = [imgs]
+        print(type(imgs), 'imgs type')
         for var, name in [(imgs, 'imgs'), (img_metas, 'img_metas')]:
+            print(name, type(var))
             if not isinstance(var, list):
                 raise TypeError(f'{name} must be a list, but got '
                                 f'{type(var)}')

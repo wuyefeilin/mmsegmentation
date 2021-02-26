@@ -146,7 +146,8 @@ class HRModule(nn.Module):
                                 mode='bilinear',
                                 align_corners=False)))
                 elif j == i:
-                    fuse_layer.append(None)
+                    # fuse_layer.append(None)
+                    fuse_layer.append(nn.ModuleList())
                 else:
                     conv_downsamples = []
                     for k in range(i - j):
@@ -392,7 +393,8 @@ class HRNet(nn.Module):
                                              num_channels_cur_layer[i])[1],
                             nn.ReLU(inplace=True)))
                 else:
-                    transition_layers.append(None)
+                    # transition_layers.append(None)
+                    transition_layers.append(nn.ModuleList())
             else:
                 conv_downsamples = []
                 for j in range(i + 1 - num_branches_pre):
@@ -520,7 +522,8 @@ class HRNet(nn.Module):
 
         x_list = []
         for i in range(self.stage2_cfg['num_branches']):
-            if self.transition1[i] is not None:
+            # if self.transition1[i] is not None:
+            if type(self.transition1[i]) is not nn.ModuleList:
                 x_list.append(self.transition1[i](x))
             else:
                 x_list.append(x)
@@ -528,7 +531,8 @@ class HRNet(nn.Module):
 
         x_list = []
         for i in range(self.stage3_cfg['num_branches']):
-            if self.transition2[i] is not None:
+            # if self.transition2[i] is not None:
+            if type(self.transition2[i]) is not nn.ModuleList:
                 x_list.append(self.transition2[i](y_list[-1]))
             else:
                 x_list.append(y_list[i])
@@ -536,7 +540,8 @@ class HRNet(nn.Module):
 
         x_list = []
         for i in range(self.stage4_cfg['num_branches']):
-            if self.transition3[i] is not None:
+            # if self.transition3[i] is not None:
+            if type(self.transition3[i]) is not nn.ModuleList:
                 x_list.append(self.transition3[i](y_list[-1]))
             else:
                 x_list.append(y_list[i])
